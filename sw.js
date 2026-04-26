@@ -1,9 +1,11 @@
 self.addEventListener("install", e => {
   e.waitUntil(
-    caches.open("app-cache").then(cache => {
+    caches.open("calc-cache").then(cache => {
       return cache.addAll([
         "./",
-        "./index.html"
+        "./index.html",
+        "./script.js",
+        "./manifest.json"
       ]);
     })
   );
@@ -11,6 +13,8 @@ self.addEventListener("install", e => {
 
 self.addEventListener("fetch", e => {
   e.respondWith(
-    caches.match(e.request).then(res => res || fetch(e.request))
+    caches.match(e.request).then(res => {
+      return res || fetch(e.request);
+    })
   );
 });
