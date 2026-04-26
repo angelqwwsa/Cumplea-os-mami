@@ -3,221 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para Mamá 💖</title>
+
+<title>Calculadora Pro</title>
 
 <link rel="manifest" href="manifest.json">
 
 <style>
 body {
   margin: 0;
-  font-family: Arial;
-  background: radial-gradient(circle, #000, #111);
-  color: white;
-  overflow: hidden;
-}
-
-#intro, #app {
+  background: radial-gradient(circle, #111, #000);
+  color: #00ffcc;
+  font-family: monospace;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   height: 100vh;
 }
 
-#screen {
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
+#app {
+  width: 340px;
+  padding: 15px;
   border-radius: 20px;
-  width: 300px;
-  min-height: 150px;
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 25px #00ffcc;
   text-align: center;
-  backdrop-filter: blur(10px);
+}
+
+input {
+  width: 100%;
+  height: 50px;
+  font-size: 24px;
+  text-align: right;
+  margin-bottom: 10px;
 }
 
 button {
-  margin-top: 15px;
-  padding: 10px 20px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(45deg, #ff4d6d, #ff85a2);
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
+  margin: 3px;
+  padding: 10px;
+  border-radius: 10px;
+  background: black;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
 }
 
-#progress {
-  width: 0%;
-  height: 5px;
-  background: pink;
-  margin-top: 10px;
+button:hover {
+  background: #00ffcc;
+  color: black;
+}
+
+#buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
 }
 </style>
 </head>
 
 <body>
 
-<div id="intro">
-  <h1>🎁 Tengo algo especial 💖</h1>
-  <button onclick="start()">▶️ Empezar</button>
+<div id="app">
+  <h2>🧮 CALCULADORA PRO</h2>
+
+  <input id="screen" disabled />
+
+  <div id="buttons"></div>
 </div>
 
-<div id="app" style="display:none;">
-  <h1>🎂 Para Mamá 💖</h1>
-
-  <div id="screen">
-    <p id="text"></p>
-  </div>
-
-  <div id="choices"></div>
-
-  <div id="progress"></div>
-
-  <button id="giftBtn" onclick="surprise()" style="display:none;">
-    🎁 Abrir sorpresa
-  </button>
-</div>
-
-<audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
+<script src="script.js"></script>
 
 <script>
-let i = 0;
-
-let scenes = [
-  "🎬 Hoy es tu día especial...",
-  "💖 ¿Qué quieres ver?"
-];
-
-let paths = {
-  recuerdos: [
-    "📸 Recuerdo cuando siempre me ayudabas",
-    "😊 Siempre estabas conmigo",
-    "💖 Gracias por todo mamá"
-  ],
-  amor: [
-    "💖 Eres la mejor mamá",
-    "🌸 Tu amor es infinito",
-    "💖 Te quiero muchísimo"
-  ]
-};
-
-function type(text, el) {
-  el.innerHTML = "";
-  let j = 0;
-  let interval = setInterval(() => {
-    el.innerHTML += text[j];
-    j++;
-    if (j >= text.length) clearInterval(interval);
-  }, 40);
-}
-
-function start() {
-  document.getElementById("intro").style.display = "none";
-  document.getElementById("app").style.display = "flex";
-
-  let music = document.getElementById("music");
-  music.volume = 0;
-  music.play();
-
-  let fade = setInterval(() => {
-    if (music.volume < 1) music.volume += 0.05;
-    else clearInterval(fade);
-  }, 200);
-
-  next();
-}
-
-function next() {
-  if (i < scenes.length) {
-    let text = document.getElementById("text");
-
-    type(scenes[i], text);
-
-    document.getElementById("progress").style.width =
-      (i / scenes.length) * 100 + "%";
-
-    if (i === 1) {
-      setTimeout(showChoices, 2500);
-    } else {
-      setTimeout(next, 3000);
-    }
-
-    i++;
-  } else {
-    end();
-  }
-}
-
-function showChoices() {
-  let choices = document.getElementById("choices");
-
-  choices.innerHTML = `
-    <button onclick="choose('recuerdos')">📸 Recuerdos</button>
-    <button onclick="choose('amor')">💖 Mensaje de amor</button>
-  `;
-}
-
-function choose(option) {
-  document.getElementById("choices").innerHTML = "";
-
-  let arr = paths[option];
-  let idx = 0;
-
-  function show() {
-    if (idx < arr.length) {
-      type(arr[idx], document.getElementById("text"));
-      idx++;
-      setTimeout(show, 2500);
-    } else {
-      end();
-    }
-  }
-
-  show();
-}
-
-function particle(symbol, speed) {
-  let p = document.createElement("div");
-  p.innerText = symbol;
-  p.style.position = "absolute";
-  p.style.left = Math.random() * window.innerWidth + "px";
-  p.style.top = window.innerHeight + "px";
-  document.body.appendChild(p);
-
-  let move = setInterval(() => {
-    let t = parseInt(p.style.top);
-    p.style.top = t - speed + "px";
-
-    if (t < -20) {
-      p.remove();
-      clearInterval(move);
-    }
-  }, 20);
-}
-
-function end() {
-  document.getElementById("text").innerHTML =
-    "🎉 FELIZ CUMPLEAÑOS MAMÁ 🎉";
-
-  document.getElementById("giftBtn").style.display = "block";
-
-  setInterval(() => particle("💖", 3), 200);
-  setInterval(() => particle("✨", 2), 300);
-  setInterval(() => particle("🎉", 5), 150);
-}
-
-function surprise() {
-  alert("💖 Gracias por ser la mejor mamá del mundo 💖");
-}
-
-/* 🔥 FIX PWA */
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js")
-      .then(reg => console.log("✅ Service Worker registrado:", reg))
-      .catch(err => console.log("❌ Error SW:", err));
-  });
+  navigator.serviceWorker.register("sw.js");
 }
 </script>
 
